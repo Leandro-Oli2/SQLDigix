@@ -100,7 +100,7 @@ ON exercicio.aluno.id_aluno = exercicio.curtida.id_aluno;
 -- RIGHT JOIN
 SELECT * FROM exercicio.aluno RIGHT JOIN exercicio.amigo 
 ON exercicio.aluno.id_aluno = exercicio.amigo.idt_amigo1 
-OR exercicio.aluno.id_aluno = exercicio.amigo.idt_amigo2;
+OR exercicio.aluno.id_aluno = exercicio.amigo.idt_amigo2;.
 
 
 
