@@ -1,0 +1,31 @@
+CREATE TABLE usuario (
+    Id_Cliente INT NOT NULL,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    PRIMARY KEY (Id_Cliente)
+);
+CREATE TABLE cargo (
+    id INT NOT NULL,
+    nome VARCHAR(50),
+    fk_usuario INT,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_cargo_usuario FOREIGN KEY (fk_usuario)
+    REFERENCES usuario (Id_Cliente)
+);
+
+--ALterando a tabela
+
+ALTER TABLE cargo ADD COLUMN salario decimal(10,2);
+ALTER TABLE cargo ALTER COLUMN nome TYPE varchar(100);
+ALTER TABLE cargo DROP COLUMN salario;
+SELECT * FROM cargo;
+
+--Excluir a Tabela
+DROP TABLE cargo;
+DROP TABLE usuario;
+
+-- Inserindo dados na tabela
+INSERT INTO usuario values(1, 'leandro', 'leandrocandido638@gmail.com');
+INSERT INTO usuario values(2, 'arthur', 'arthursantoro@gmail.com');
+INSERT INTO usuario values(3, 'marcos', 'marcosgabriel@gmail.com');
+UPDATE cargo set salario = 2000.00 WHERE id = 2;
