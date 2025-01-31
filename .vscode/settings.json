@@ -6,7 +6,7 @@
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "PG Local",
-            "database": "Aula1",
+            "database": "Aula2",
             "username": "postgres",
             "password": "Oliveira@87185",
             "connectionTimeout": 30
