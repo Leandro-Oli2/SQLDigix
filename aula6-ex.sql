@@ -134,3 +134,30 @@ $$ language plpgsql;
 select obter_nome_denp(123);
 
 --6
+
+
+
+---8
+create or replace function SalarioEmpregado(p_cpf integer) 
+returns float as $$
+declare
+    salario float;
+begin
+    select e.Salario into salario from empregado e where CPF = p_cpf;
+
+    if salario is null then
+        raise exception 'CPF não encontrado!';
+    end if;
+
+    return salario;
+
+exception
+    when others then
+        raise notice 'Erro inesperado ao buscar salário: %', SQLERRM;
+        return null;
+end;
+$$ language plpgsql;
+
+
+select SalarioEmpregado(123);
+select * from empregado;
