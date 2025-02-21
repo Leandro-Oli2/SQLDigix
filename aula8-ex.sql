@@ -38,7 +38,7 @@ insert into Software values (4, 'Linux', 100, 2, 4);
 
 
 
--- 1
+1--
 create table log_maquina (
 	id serial primary key,
 	maquina_id integer,
@@ -67,7 +67,7 @@ select * from log_maquina;
 
 
 
--- 2
+2--
 create or replace function senha_fraca()
 returns trigger as $$
 begin
@@ -100,7 +100,9 @@ declare
 begin
 	select count(Id_Software) into cont from Software 
 	where Fk_Maquina = new.Fk_Maquina;
-	insert into Maquina_software_Count(maquina_id, qtd) values (new.Fk_Maquina, cont);
+	insert into Maquina_software_Count(maquina_id, qtd) values (new.Fk_Maquina, cont)
+	on conflict (maquina_id) 
+	do update set qtd = cont, data = current_timestamp;
 	return new;
 end;
 $$ language plpgsql;
@@ -111,7 +113,83 @@ for each row
 execute function cont_software();
 
 insert into Software values (5, 'Linux', 100, 2, 2);
-insert into Software values (6, 'ubuntu', 100, 2, 3);
+insert into Software values (7, 'ubuntu', 100, 2, 4);
+insert into Software values (8, 'ubuntu', 100, 2, 4);
+insert into Software values (10, 'ubuntu', 100, 2, 2);
+insert into Software values (11, 'ubuntu', 100, 2, 2);
+
 
 select * from Maquina_software_Count;
-select * from software;
+
+4--
+
+create or replace function evitar_remov()
+returns trigger as $$
+begin
+	if old.Especialidade = 'TI' then
+		raise exception 'Erro: Não eh permitido excluir pessoas do TI';
+	end if;
+	return old;
+end;
+$$ language plpgsql;
+
+create or replace trigger evitar_remov
+before delete on Usuarios
+for each row
+execute function evitar_remov();
+
+delete from Usuarios where ID_Usuario = 4;
+select * from Usuarios;
+
+5--
+
+
+
+6--
+create table newEspecialidade (
+	id serial primary key,
+	ID_Usuario integer,
+	Espec VARCHAR(255),
+	data timestamp default current_timestamp
+);
+
+
+create or replace function update_user()
+returns trigger as $$
+begin
+	insert into newEspecialidade(ID_Usua
+	
+	
+	rio, Espec) values (new.ID_Usuario, new.Especialidade);
+	return new;
+end;
+$$ language plpgsql;
+
+create or replace trigger update_user
+after update on Usuarios
+for each row
+execute function update_user();
+	
+update Usuarios set Especialidade = 'TI' where ID_Usuario = 2;
+select * from newEspecialidade;
+select * from Usuarios;
+
+7--
+create or replace function evitar_remov_soft()
+returns trigger as $$
+begin
+	if old.Produto = 'Windows' then
+		raise exception 'Erro: Não eh permitido excluir softwares importantes';
+	end if;
+	return old;
+end;
+$$ language plpgsql;
+
+create or replace trigger evitar_remov_soft
+before delete on Software
+for each row
+execute function evitar_remov_soft();
+
+delete from Software where ID_software = 2;
+select * from Software;
+
